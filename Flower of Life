@@ -1,0 +1,146 @@
+//Flower of life reboot 6/21/16         
+//shoutout to daniel shiffman for star field code \/
+//https://www.youtube.com/watch?v=17WoOqgXsRM&list=PLRqwX-V7Uu6ZiZxtDDRCi6uhfTH4FilpH&index=1
+
+Star[] stars = new Star[500];
+
+float speed;
+int w,h;
+float a = 0.0;
+float s = 0.0;
+
+int cols,rows;
+int scl = 20;
+
+void setup() {
+  size(1300,1100,P3D);
+  w = 1300;
+  h = w;
+  
+  background(0,180,235);
+  stroke(255);
+  strokeWeight(5);
+ for( int i = 0; i < stars.length; i++) {
+    stars[i] = new Star();
+  }
+  smooth();
+}
+
+void draw() {
+  fill(0,20);
+  noStroke();
+  rect(0,0, width,height);
+flowerLife();
+speed = random(9,15);
+
+pushMatrix();
+translate(w/2,h/2);
+ for (int z = 0; z < stars.length; z++) {
+        stars[z].update();
+        stars[z].show();
+      }
+     popMatrix();
+}
+
+
+void flowerLife() {
+stroke(255,0,0);
+strokeWeight(10);
+point(w/2,h/2);
+
+strokeWeight(5);
+stroke(255);
+//noFill();
+float sv = sin(s);
+float sz = map(sv, -1,1, -350,300);
+float zs = map(sv, 1,-1, -350,300);
+
+pushMatrix();
+translate(w/2,h/2-100);
+rotate(a);
+for(int z = 0; z < 10; z++) {
+  //
+  rotate(PI/4);
+ // stroke(random(255),random(255),random(255),100);
+  //  fill(random(255),random(255),random(255),100);
+
+bezier(0,0, -sz,sz, -zs,-zs, 0,0);
+ 
+  }
+  popMatrix();
+ //////////////////////////
+ /////////////////////////////
+ pushMatrix();
+translate(w/2,h/2-100);
+rotate(-a);
+for(int z = 0; z < 10; z++) {
+  //
+  rotate(PI/4);
+ // stroke(random(255),random(255),random(255),100);
+  //  fill(random(255),random(255),random(255),100);
+
+bezier(0,0, -zs,zs, -sz,-sz, 0,0);
+ // 
+
+  
+  }
+  popMatrix();
+  a+=0.01;
+  s+=0.005;
+}
+
+
+class Star {
+  float x;
+  float y;
+  float z;
+  float pz;
+  color col;
+  
+  
+    
+    
+  //shiffmanStar
+  Star() {
+    x = random(-width/2,width/2);
+    y = random(-height/2,height/2);
+    z = random(width);
+    pz = z;
+    col = color(random(255),random(255),random(255));
+  }
+    void update() {
+      z -= speed;
+      if(z < 1) {
+        z = width;
+         x = random(-width,width);
+         y = random(-height,height);
+         pz = this.z;
+         col = color(random(255),random(255),random(255));
+      }
+    }
+    
+    void show() {
+     float tz = map(z*4, 0,width, 0,50);
+     noFill();
+      fill(col);
+      noStroke();
+      stroke(col,tz);
+      float sx = map(x / z, 0,1, 0,width/2);
+      float sy = map(y / z, 0,1, 0,height/2);
+      
+      float r = map(z, 0,width, 30,1);
+      strokeWeight(r);
+      point(sx,sy);
+     
+      float px = map(x / pz, 0,1, 0,width/2);
+      float py = map(y / pz, 0,1, 0,height/2);
+      strokeWeight(2);
+       line(sx,sy,px,py);
+     pz = z;
+     
+ 
+   //   stroke(col,tz);
+      line(px,py, sx,sy);
+
+    }
+}
